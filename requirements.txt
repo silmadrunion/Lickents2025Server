@@ -1,0 +1,9 @@
+wheel
+Flask
+Flask-SQLAlchemy
+python-dotenv
+pytest
+gunicorn
+flasgger
+requests
+flask-cors
