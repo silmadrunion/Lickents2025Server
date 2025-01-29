@@ -7,3 +7,4 @@ gunicorn
 flasgger
 requests
 flask-cors
+pymongo[srv]
