@@ -1,7 +1,6 @@
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS
 
-from requests import request
 import json
 import mockup
 
@@ -9,7 +8,7 @@ import mockup
 import os
 from dotenv import load_dotenv
 
-import pymongo
+# import pymongo
 
 
 load_dotenv()
@@ -21,7 +20,7 @@ CORS(app)
 def generic_mockup(mockup_string):
     response = json.loads(mockup_string)
     return response
-
+"""
 try:
     uri = os.environ['MONGO_CONNECTION_STRING']
     db_client = pymongo.MongoClient(uri, server_api=pymongo.server_api.ServerApi(
@@ -52,44 +51,113 @@ try:
 
 except Exception as e:
     raise Exception("Error!! ", e)
-
+"""
 
 @app.route("/", methods=['GET'])
 def hello_world():
     return "Response"
 
-@app.route("/listings", methods=['GET', 'POST', 'PUT', 'DELETE'])
-def mock_get_listings():
+@app.route("/game", methods=['GET', 'POST', 'PUT','PATCH', 'DELETE'])
+def mock_get_games():
 
     if request.method == 'GET':
         game_id = request.args.get('game-id')
+        user_id = request.args.get('user-id')  # requires all games by user id, currently just catching it for mockup
         if game_id:
+            return generic_mockup(mockup.single_game)
+        else:
+            return generic_mockup(mockup.all_games) 
+    if request.method == 'POST':
+        game_id = request.form.get('game-id')
+        game_name = request.form.get('game-name') # Find a smarter way to process because this will be the entire obj cast line by line otherwise
+
+        return generic_mockup(mockup.game_post)
+
+
+    if request.method == 'PUT': # this is here for classic REST support, might remove it in the final version as PATCH handles the Update in CRUD
+        game_id = request.args.get('game-id')
+        game_name = request.form.get('game-name')
+
+        return generic_mockup(mockup.game_put)
+
+    if request.method == 'PATCH':
+        game_id = request.args.get('game-id')
+        game_name = request.form.get('game-name')
+
+        return generic_mockup(mockup.game_patch)
+
+
+    if request.method == 'DELETE':
+        game_id = request.args.get('game-id')
+        return generic_mockup(mockup.deleted_empty) #only because returning empty json might not be that straight and I don't wanna find out
+
+@app.route("/listing", methods=['GET', 'POST', 'PUT', 'DELETE'])
+def mock_get_listings():
+
+    if request.method == 'GET':
+        listing_id = request.args.get('listing-id')
+        user_id = request.args.get('user-id')
+        if listing_id:
             return generic_mockup(mockup.single_listing)
         else:
             return generic_mockup(mockup.all_listings)
+        
     if request.method == 'POST':
-        game_id = request.form.get('game_id')
+        game_id = request.form.get('game-id')
 
+        return generic_mockup(mockup.listing_post)
 
     if request.method == 'PUT':
         game_id = request.args.get('game-id')
 
+        return generic_mockup(mockup.listing_put)
+
+    if request.method == 'PATCH':
+        game_id = request.args.get('game-name')
+
+        return generic_mockup(mockup.listing_patch)
+
     if request.method == 'DELETE':
-        game_id = request.args.get('game-id')
-        return "Deleted"
-
-@app.route("/listing", methods=['GET'])
-def mock_get_listing():
-    return generic_mockup(mockup.single_listing)
-
-@app.route("/games-library", methods=['GET'])
-def mock_get_library():
-    client_id = request.args.get('client-id')
-    if client_id:
-        return generic_mockup()
-    else:
-        return "ERROR"
+        listing_id = request.args.get('listing-id')
+        return generic_mockup(mockup.deleted_empty)
     
+@app.route("/offer", methods=['GET', 'POST', 'PUT', 'DELETE'])
+def mock_get_offers():
+
+    if request.method == 'GET':
+        offer_id = request.args.get('offer-id')
+        user_id = request.args.get('user-id')
+        if offer_id:
+            return generic_mockup(mockup.single_offer)
+        else:
+            return generic_mockup(mockup.all_offers)
+        
+    if request.method == 'POST':
+        game_id = request.form.get('game-id')
+        listing_id = request.form.get('listing-id')
+
+        return generic_mockup(mockup.offer_post)
+
+    if request.method == 'PUT':
+        offer_id = request.args.get('offer-id')
+        game_id = request.form.get('game-id')
+
+        return generic_mockup(mockup.offer_put)
+
+    if request.method == 'PATCH':
+        offer_id = request.args.get('offer-id')
+        game_id = request.form.get('game-id')
+
+        return generic_mockup(mockup.offer_patch)
+
+    if request.method == 'DELETE':
+        offer_id = request.args.get('offer-id')
+        return generic_mockup(mockup.deleted_empty)
+    
+
+
+
+""" 
 @app.route("/games", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def handle_game():
     if request.method == 'GET':
@@ -119,7 +187,7 @@ def handle_game():
         return "Deleted"
 
     return "error"
-
+"""
 
 # This is a working connection example, look to setup DB next
 """ try:
