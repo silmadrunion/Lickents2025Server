@@ -391,58 +391,10 @@ all_listings = '''[
         ]
     },
 
-    "offers" : [ 
-    {
-        "offerId" : "mockOfferId1",
-        "offerstatus": "CANCELLED_XD",
-        "offerUserId" : "mockOfferUID1",
-
-        "gameUserDetails":{
-            "gameUserId":"stri123123123ng",
-            "gameUserRating":4.99,
-            "gameUserName":"Fluff Robota ",
-            "gameUserImagePath":"string"
-        },
-
-        "chatDataId" :"ifhere",
-        "offerGameDetails":[
-                {
-                "gameId":"1231231231",
-                "gameName":"Ark Nova (2021)"
-                },
-                {
-                "gameId":"1231231231",
-                "gameName":"Ark Nova (2021)"
-                }
-            ]
+    "offers" : [ ]
         
-    },
-        {
-        "offerId" : "mockOfferId1",
-        "offerstatus": "CANCELLED_XD",
-        "offerUserId" : "mockOfferUID1",
-
-        "gameUserDetails":{
-            "gameUserId":"stri123123123ng",
-            "gameUserRating":4.99,
-            "gameUserName":"Fluff Robota ",
-            "gameUserImagePath":"string"
-        },
-
-        "chatDataId" :"ifhere",
-        "offerGameDetails":[
-                {
-                "gameId":"1231231231",
-                "gameName":"Ark Nova (2021)"
-                },
-                {
-                "gameId":"1231231231",
-                "gameName":"Ark Nova (2021)"
-                }
-            ]
         
-        }
-    ]
+    
 }
 ]'''
 
