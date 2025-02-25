@@ -8,7 +8,11 @@ import mockup
 import os
 from dotenv import load_dotenv
 
+import dbHandlers.game as game
+
 # import pymongo
+
+# Check how to split into files for routes maybe?
 
 
 load_dotenv()
@@ -20,28 +24,10 @@ CORS(app)
 def generic_mockup(mockup_string):
     response = json.loads(mockup_string)
     return response
+
 """
 try:
-    uri = os.environ['MONGO_CONNECTION_STRING']
-    db_client = pymongo.MongoClient(uri, server_api=pymongo.server_api.ServerApi(
-    version="1", strict=True, deprecation_errors=True))
-
-
-    database = db_client["LicentaGamesDB"]
-
-    collection = database["Games"]
-
-    db_client.admin.command("ping")
-
-    
-    object_dict = {}
-    object_dict['game_id'] = 12345
-    object_dict['game_name'] = 'testName'
-    object_dict['game_description'] = 'testDescription'
-
-    print(object_dict)
-
-    result = collection.insert_one(object_dict) #Using Dumps not Jsonify because we do not need the extra response-type data jsonify provides
+ 
     print(result.acknowledged) # Boolean of if it worked
     print(result.inserted_id) # String of the inserted ID
 
@@ -53,25 +39,31 @@ except Exception as e:
     raise Exception("Error!! ", e)
 """
 
+
 @app.route("/", methods=['GET'])
 def hello_world():
     return "Response"
 
 @app.route("/game", methods=['GET', 'POST', 'PUT','PATCH', 'DELETE'])
 def mock_get_games():
-
+    gameObj = game.Game()
     if request.method == 'GET':
         game_id = request.args.get('game-id')
         user_id = request.args.get('user-id')  # requires all games by user id, currently just catching it for mockup
         if game_id:
-            return generic_mockup(mockup.single_game)
+            gameObj.set_from_db(game_id)
+            return gameObj.get_dict()
         else:
-            return generic_mockup(mockup.all_games) 
+            gameObj.set_multiple_dicts()
+            return gameObj.get_dict()
     if request.method == 'POST':
-        game_id = request.form.get('game-id')
-        game_name = request.form.get('game-name') # Find a smarter way to process because this will be the entire obj cast line by line otherwise
+        #game_id = request.form.get('game-id')
+        #game_name = request.form.get('game-name') # Find a smarter way to process because this will be the entire obj cast line by line otherwise
 
-        return generic_mockup(mockup.game_post)
+        gameObj.set_from_api(request.form)
+        result = gameObj.upload_to_db()
+
+        return {"id": result}
 
 
     if request.method == 'PUT': # this is here for classic REST support, might remove it in the final version as PATCH handles the Update in CRUD
