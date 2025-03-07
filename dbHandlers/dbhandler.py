@@ -30,9 +30,12 @@ try:
 except Exception as e:
     raise Exception("Error connecting to database: ", e)
 
-def insert_to_collection(collection_name, object_dict):
+def insert_to_collection(collection_name, object_dict, object_id = None):
     if collection_name in collections:
-        result = collections[collection_name].insert_one(object_dict)
+        if object_id:
+            result = collections[collection_name].replace_one({"_id":ObjectId(object_id)},object_dict)
+        else:
+            result = collections[collection_name].insert_one(object_dict)
         return result
     else:
         return False # Error handling ??
@@ -63,3 +66,7 @@ def get_multiple_from_collection(collection_name, query = {}):
         return list(result)
     else:
         return False # Error handle
+
+def delete_from_collection(collection_name, object_id):
+    if collection_name in collections:
+        result = collections[collection_name].delete_one({"_id":ObjectId(object_id)})

@@ -36,7 +36,7 @@ class Game:
     def get_dict(self):
         return self.dict
     
-    def set_multiple_dicts(self, user_id=False):
+    def set_multiple_dicts(self, user_id=None):
         if user_id:
             self.dict = dbhandler.get_multiple_from_collection("Games", {"gameOwnerId": user_id}) # Recheck this
         else:
@@ -44,10 +44,22 @@ class Game:
             print(self.dict)
 
     
-    def upload_to_db(self):
-        result = dbhandler.insert_to_collection("Games", self.dict)
+    def upload_to_db(self, object_id=None):
+        
+        result = dbhandler.insert_to_collection("Games", self.dict, object_id)
 
         if result.acknowledged:
-            return str(result.inserted_id)
+            if object_id:
+                return str(result.upserted_id)
+            else:
+                return str(result.inserted_id)
+        else:
+            return f"Error? {result}"
+        
+    def delete_from_db(self,object_id):
+        result = dbhandler.delete_from_collection("Games", object_id)
+
+        if result.acknowledged:
+            return str(result.deleted_count)
         else:
             return f"Error? {result}"
