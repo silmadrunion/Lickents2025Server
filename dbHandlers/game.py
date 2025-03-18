@@ -13,6 +13,12 @@ import json
 # x = lambda a: True if 'key' in dict else False
 
 
+temp_hardcoded_user_dict = {
+        "_id": "stri123123123ng",
+        "gameUserRating": 4.99,
+        "gameUserName": "Fluff Robota",
+        "gameUserImagePath": "some path"
+        }
 
 class Game:
     def __init__(self): # will be formed as a default empty shell, and is only settable through its setters
@@ -31,7 +37,9 @@ class Game:
 
     def set_from_db(self, db_id): # This will fetch from db by id into self.dict
         #return error if not string
-        self.dict = dbhandler.get_from_collection("Games", db_id)
+        self.dict["gameDetails"] = dbhandler.get_from_collection("Games", db_id)
+
+        self.dict["gameUserDetails"] = temp_hardcoded_user_dict
 
     def get_dict(self):
         return self.dict
@@ -41,7 +49,10 @@ class Game:
             self.dict = dbhandler.get_multiple_from_collection("Games", {"gameOwnerId": user_id}) # Recheck this
         else:
             self.dict = dbhandler.get_multiple_from_collection("Games")
-            print(self.dict)
+
+        for game in self.dict:
+            game["gameUserDetails"] = temp_hardcoded_user_dict
+        print(self.dict)
 
     
     def upload_to_db(self, object_id=None):

@@ -3,7 +3,9 @@ deleted_empty = '''
                 }
     '''
 
-# my library
+# Conversation: a game's structure should have some basic info outside of all nesting, such as _id, userId, possibly Name ; a gameUserDetails with full user details ; and a gameDetails with full game details
+# In regards to POST: POST (and consequently PUT and PATCH) will need to format their data to include the gameDetails key themselves, and not just send all data unformatted then expect the GET to be formatted by the DB
+
 all_games = '''[
 {
     "gameId":"1231231231",
