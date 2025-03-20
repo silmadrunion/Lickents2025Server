@@ -83,6 +83,9 @@ single_listing = '''{
     "listingId" : "mockListingId",
     "gameId" : "mockGameId",
     "userId" : "mockUserId",
+
+    "offerIds": ["oid1","oid2"],
+
     "gameDetails" : {
         "gameName" : "Mock Game Name",
         "otherDetails" : "This data comes from the Games DB entity, actually, but I'll return it through the Listing endpoint for frontend purposes"
