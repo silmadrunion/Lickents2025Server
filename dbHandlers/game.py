@@ -5,6 +5,8 @@ from bson import ObjectId
 
 import json
 
+import werkzeug.datastructures
+
 # Lambda Notes 
 # x = lambda a: True if a > 10 else False
 # x = lambda a: True if a is not None else False
@@ -32,8 +34,8 @@ class Game:
         elif not isinstance(inputDict["gameId"], str):
             error_log.append("gameId is not String")
 
-    def set_from_api(self, inputMultiDict): # This will run validation eventually
-        self.dict = inputMultiDict.to_dict()
+    def set_from_api(self, input): # This will run validation eventually
+        self.dict = input
 
     def set_from_db(self, db_id): # This will fetch from db by id into self.dict
         #return error if not string
@@ -55,13 +57,15 @@ class Game:
         print(self.dict)
 
     
-    def upload_to_db(self, object_id=None):
-        
-        result = dbhandler.insert_to_collection("Games", self.dict, object_id)
+    def upload_to_db(self, object_id=None, patch=False):
+        print("ID:", object_id)
+        result = dbhandler.insert_to_collection("Games", self.dict, object_id, patch)
+
+        print(result)
 
         if result.acknowledged:
             if object_id:
-                return str(result.upserted_id)
+                return object_id
             else:
                 return str(result.inserted_id)
         else:
