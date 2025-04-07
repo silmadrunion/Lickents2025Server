@@ -34,7 +34,7 @@ def insert_to_collection(collection_name, object_dict, object_id = None, patch=F
     if collection_name in collections:
         if object_id:
             if patch:
-                result = collections[collection_name].update_one({"_id":ObjectId(object_id)},object_dict)
+                result = collections[collection_name].update_one({"_id":ObjectId(object_id)}, {'$set': object_dict}, upsert=True)
             else:
                 result = collections[collection_name].replace_one({"_id":ObjectId(object_id)},object_dict)
         else:

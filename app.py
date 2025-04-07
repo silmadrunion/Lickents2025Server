@@ -91,7 +91,7 @@ def mock_get_games():
 
         result = gameObj.delete_from_db(game_id)
 
-        return {} #only because returning empty json might not be that straight and I don't wanna find out
+        return {} 
 
 @app.route("/listing", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def mock_get_listings():
