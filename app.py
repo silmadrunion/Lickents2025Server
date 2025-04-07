@@ -60,7 +60,8 @@ def mock_get_games():
         #game_id = request.form.get('game-id')
         #game_name = request.form.get('game-name') # Find a smarter way to process because this will be the entire obj cast line by line otherwise
 
-        gameObj.set_from_api(request.form)
+        print("POST received body:", request.json)
+        gameObj.set_from_api(request.json)
         result = gameObj.upload_to_db()
 
         return {"id": result}
@@ -68,20 +69,29 @@ def mock_get_games():
 
     if request.method == 'PUT': # this is here for classic REST support, might remove it in the final version as PATCH handles the Update in CRUD
         game_id = request.args.get('game-id')
-        game_name = request.form.get('game-name')
+        
+        print("PUT received body:", request.json)
+        gameObj.set_from_api(request.json)
+        result = gameObj.upload_to_db(game_id)
 
-        return generic_mockup(mockup.game_put)
+        return {"id": result}
 
     if request.method == 'PATCH':
         game_id = request.args.get('game-id')
-        game_name = request.form.get('game-name')
+        
+        print("PATCH received body:", request.json)
+        gameObj.set_from_api(request.json)
+        result = gameObj.upload_to_db(game_id, patch=True)
 
-        return generic_mockup(mockup.game_patch)
+        return {"id": result}
 
 
     if request.method == 'DELETE':
         game_id = request.args.get('game-id')
-        return generic_mockup(mockup.deleted_empty) #only because returning empty json might not be that straight and I don't wanna find out
+
+        result = gameObj.delete_from_db(game_id)
+
+        return {} 
 
 @app.route("/listing", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def mock_get_listings():

@@ -1,11 +1,11 @@
 import dbHandlers.dbhandler as dbhandler
 import dbHandlers.validators as validators
 
+import dbHandlers.game as game
+
 from bson import ObjectId
 
 import json
-
-import werkzeug.datastructures
 
 # Lambda Notes 
 # x = lambda a: True if a > 10 else False
@@ -22,7 +22,7 @@ temp_hardcoded_user_dict = {
         "gameUserImagePath": "some path"
         }
 
-class Game:
+class Listing:
     def __init__(self): # will be formed as a default empty shell, and is only settable through its setters
         self.dict = {}
 
@@ -34,14 +34,20 @@ class Game:
         elif not isinstance(inputDict["gameId"], str):
             error_log.append("gameId is not String")
 
-    def set_from_api(self, input): # This will run validation eventually
-        self.dict = input
+    def set_from_api(self, inputMultiDict): # This will run validation eventually
+        self.dict = inputMultiDict.to_dict() # Listing won't require Game Details when populated from API, as an fk is all the Post and Patch require
 
     def set_from_db(self, db_id): # This will fetch from db by id into self.dict
         #return error if not string
-        self.dict["gameDetails"] = dbhandler.get_from_collection("Games", db_id)
+        self.dict = dbhandler.get_from_collection("Listings", db_id)
 
-        self.dict["gameUserDetails"] = temp_hardcoded_user_dict
+        self.dict["gameDetails"] = dbhandler.get_from_collection("Games", self.dict["gameId"])
+
+        if len(self.dict["offerIds"]) > 0: # See about rewriting this with a multi ID aggregate straight from DB
+            self.dict["offers"] = []
+            for offerId in self.dict["offerIds"]:
+                self.dict["offers"].append(dbhandler.get_from_collection("Offers", offerId))
+
 
     def get_dict(self):
         return self.dict
@@ -57,15 +63,13 @@ class Game:
         print(self.dict)
 
     
-    def upload_to_db(self, object_id=None, patch=False):
-        print("ID:", object_id)
-        result = dbhandler.insert_to_collection("Games", self.dict, object_id, patch)
-
-        print(result)
+    def upload_to_db(self, object_id=None):
+        
+        result = dbhandler.insert_to_collection("Games", self.dict, object_id)
 
         if result.acknowledged:
             if object_id:
-                return object_id
+                return str(result.upserted_id)
             else:
                 return str(result.inserted_id)
         else:
