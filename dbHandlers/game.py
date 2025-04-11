@@ -39,6 +39,8 @@ class Game:
 
     def set_from_db(self, db_id): # This will fetch from db by id into self.dict
         #return error if not string
+        self.dict = {}
+
         self.dict["gameDetails"] = dbhandler.get_from_collection("Games", db_id)
 
         self.dict["gameUserDetails"] = temp_hardcoded_user_dict
@@ -65,9 +67,16 @@ class Game:
 
         if result.acknowledged:
             if object_id:
-                return object_id
+                new_id = object_id
             else:
-                return str(result.inserted_id)
+                new_id = str(result.inserted_id)
+
+            self.set_from_db(new_id)
+
+            print(self.dict)
+
+            return self.dict
+        
         else:
             return f"Error? {result}"
         
