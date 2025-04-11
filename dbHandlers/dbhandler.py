@@ -55,6 +55,7 @@ def get_from_collection(collection_name, object_id):
                 { "$addFields": { "_id": { "$toString": "$_id" } } }
                     ]
         result = collections[collection_name].aggregate(pipeline).next()
+        print(result)
         return result
     else:
         return False # Error handle

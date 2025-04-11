@@ -64,7 +64,7 @@ def mock_get_games():
         gameObj.set_from_api(request.json)
         result = gameObj.upload_to_db()
 
-        return {"id": result}
+        return result
 
 
     if request.method == 'PUT': # this is here for classic REST support, might remove it in the final version as PATCH handles the Update in CRUD
@@ -74,7 +74,7 @@ def mock_get_games():
         gameObj.set_from_api(request.json)
         result = gameObj.upload_to_db(game_id)
 
-        return {"id": result}
+        return result
 
     if request.method == 'PATCH':
         game_id = request.args.get('game-id')
@@ -83,7 +83,7 @@ def mock_get_games():
         gameObj.set_from_api(request.json)
         result = gameObj.upload_to_db(game_id, patch=True)
 
-        return {"id": result}
+        return result
 
 
     if request.method == 'DELETE':
