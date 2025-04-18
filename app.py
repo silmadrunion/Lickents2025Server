@@ -1,5 +1,7 @@
-from flask import Flask, request
-from flask_cors import CORS
+#from flask import Flask, request
+#from flask_cors import CORS
+
+from fastapi import FastAPI
 
 import json
 import mockup
@@ -18,8 +20,11 @@ import dbHandlers.game as game
 load_dotenv()
 
 
-app = Flask(__name__)
-CORS(app)
+#app = Flask(__name__)
+
+app = FastAPI()
+
+#CORS(app)
 
 def generic_mockup(mockup_string):
     response = json.loads(mockup_string)
@@ -40,9 +45,28 @@ except Exception as e:
 """
 
 
-@app.route("/", methods=['GET'])
-def hello_world():
-    return "Response"
+@app.get("/")
+async def root():
+    return "This is the server root"
+
+@app.get("/game")
+async def get_all_games():
+    gameObj = game.Game()
+    gameObj.set_multiple_dicts()
+    return gameObj.get_dict()
+
+@app.get("/game/{game_id}")
+async def get_game_by_id(game_id):
+    gameObj = game.Game()
+    gameObj.set_from_db(game_id)
+    return gameObj.get_dict()
+
+@app.get("/game/{user-id}")
+async def get_all_games_by_user(user_id):
+    return "Unimplemented"
+
+
+
 
 @app.route("/game", methods=['GET', 'POST', 'PUT','PATCH', 'DELETE'])
 def mock_get_games():

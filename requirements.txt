@@ -8,3 +8,4 @@ flasgger
 requests
 flask-cors
 pymongo[srv]
+fastapi[standard]
