@@ -2,6 +2,7 @@
 #from flask_cors import CORS
 
 from fastapi import FastAPI
+import uvicorn
 
 import json
 import mockup
@@ -10,6 +11,8 @@ import mockup
 import os
 from dotenv import load_dotenv
 
+load_dotenv()
+
 import dbHandlers.game as game
 
 # import pymongo
@@ -17,7 +20,6 @@ import dbHandlers.game as game
 # Check how to split into files for routes maybe?
 
 
-load_dotenv()
 
 
 #app = Flask(__name__)
@@ -65,9 +67,10 @@ async def get_game_by_id(game_id):
 async def get_all_games_by_user(user_id):
     return "Unimplemented"
 
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
 
-
-
+'''
 @app.route("/game", methods=['GET', 'POST', 'PUT','PATCH', 'DELETE'])
 def mock_get_games():
     gameObj = game.Game()
@@ -229,3 +232,5 @@ def handle_game():
 
 except Exception as e:
     raise Exception("Error!! ", e)"""
+
+    '''
