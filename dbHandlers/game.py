@@ -26,6 +26,7 @@ class Game:
     def __init__(self): # will be formed as a default empty shell, and is only settable through its setters
         self.dict = {}
 
+    '''
     # This will need to also validate that no extra keys exist, implement a key list check for that
     def validateObject(self, inputDict):
         error_log = []
@@ -87,3 +88,4 @@ class Game:
             return str(result.deleted_count)
         else:
             return f"Error? {result}"
+            '''

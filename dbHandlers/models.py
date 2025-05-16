@@ -20,10 +20,12 @@ class GameDetails(Document):
     gamePlayTime: str = ""
     gameComplexity: Optional[int]
     gameBGGRating: Optional[int] # These will have added validation checks
-    gameDesigners: list[str] = []
-    gameArtists: list[str] = []
-    gameMechanisms: list[str] = []
-    gameCategories: list[str] = []
+    gameDesigners: list = []
+    gameArtists: list = []
+    gameMechanisms: list = []
+    gameCategories: list = []
+    class Settings:
+        name = "Games"
 
 class GameObject(BaseModel):
     gameUserDetails: UserDetails

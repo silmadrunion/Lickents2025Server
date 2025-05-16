@@ -13,7 +13,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-import dbHandlers.game as game
+#import dbHandlers.game as game
+
+import dbHandlers.dbhandler as handler
 
 # import pymongo
 
@@ -53,15 +55,17 @@ async def root():
 
 @app.get("/game")
 async def get_all_games():
-    gameObj = game.Game()
-    gameObj.set_multiple_dicts()
-    return gameObj.get_dict()
+    #gameObj = game.Game()
+    #gameObj.set_multiple_dicts()
+    return "not implemented"
 
 @app.get("/game/{game_id}")
 async def get_game_by_id(game_id):
-    gameObj = game.Game()
-    gameObj.set_from_db(game_id)
-    return gameObj.get_dict()
+    print(game_id)
+    gameObj = await handler.get_from_collection(game_id)
+    print("??")
+    print(gameObj)
+    return gameObj
 
 @app.get("/game/{user-id}")
 async def get_all_games_by_user(user_id):
