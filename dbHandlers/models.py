@@ -1,35 +1,41 @@
-from typing import Optional
+from typing import Optional, Union
 
-import pymongo
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
-from beanie import Document, Indexed
+from beanie import Document, Indexed, PydanticObjectId
+
+from bson import ObjectId
 
 class UserDetails(BaseModel):
-    id: str = "stri123123123ng"
+    id: str = Field(default="stri123123123ng", alias="_id")
     userName: str = "Fluff Robota"
     userImagePath: str = "some path"
     userRating: float = 4.99
 
 class GameDetails(Document):
-    gameName: str
-    gameDescriptionByClient: str = ""
-    gameDescription: str =""
-    gamePlayerNo: int
-    gameReccommandedAge: Optional[int]
-    gamePlayTime: str = ""
-    gameComplexity: Optional[int]
-    gameBGGRating: Optional[int] # These will have added validation checks
-    gameDesigners: list = []
-    gameArtists: list = []
-    gameMechanisms: list = []
-    gameCategories: list = []
+    gameName: Union[str, None] = None
+    gameOwnerId: Union[str, None] = None
+    gameDescriptionByClient: Union[str, None] = None
+    gameDescription: Union[str, None] = None
+    gamePlayerNo: Union[int, None] = None
+    gameReccommandedAge: Union[int, None] = None
+    gamePlayTime: Union[str, None] = None
+    gameComplexity: Union[int, None] = None
+    gameBGGRating: Union[int, None] = None # These will have added validation checks
+    gameDesigners: Union[list, None] = None
+    gameArtists: Union[list, None] = None
+    gameMechanisms: Union[list, None] = None
+    gameCategories: Union[list, None] = None
     class Settings:
+        keep_nulls = False
         name = "Games"
+
 
 class GameObject(BaseModel):
     gameUserDetails: UserDetails
     gameDetails: GameDetails
 
+class TestModel(BaseModel):
+    test: UserDetails
 
     

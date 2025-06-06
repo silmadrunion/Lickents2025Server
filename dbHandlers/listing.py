@@ -14,6 +14,8 @@ import json
 # x = lambda a: isinstance(a, str)
 # x = lambda a: True if 'key' in dict else False
 
+#Leftover for historical reasons for now, will delete in the future
+
 
 temp_hardcoded_user_dict = {
         "_id": "stri123123123ng",

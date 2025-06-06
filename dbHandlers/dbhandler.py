@@ -4,7 +4,7 @@ from beanie import Document, Indexed, init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
 
-from dbHandlers.models import GameDetails
+from dbHandlers.models import GameDetails, GameObject, UserDetails, TestModel
 
 import os
 from dotenv import load_dotenv
@@ -12,42 +12,55 @@ from dotenv import load_dotenv
 
 # Make into a singleton to import in other modules
 
+# Possibly deprecate once the User Details db entity has been made
 
-'''collections = {
-    "Games": database["Games"]
-}
-'''
+default_details = UserDetails()
+print(default_details)
 
 uri = os.environ['MONGO_CONNECTION_STRING']
 
-async def get_from_collection(object_id):
+async def init_database():
     client = AsyncIOMotorClient(uri)
 
     await init_beanie(database=client.LicentaGamesDB, document_models=[GameDetails])
+
+    print("DB Initialized")
+
+async def get_from_collection(object_id):
 
     result = 0
 
     print(object_id)
     result = await GameDetails.get(object_id)
 
-    #print("DB RESULT:", result)
+    print("DB RESULT:", result)
+
+    game_object = GameObject(gameUserDetails = default_details, gameDetails = result)
+    #game_object = TestModel(test = default_details)
+    print(game_object)
+
+    return game_object
+
+async def get_multiple_from_collection(query = {}):
+
+    result = 0
+
+    print(query)
+    result = await GameDetails.find(query).to_list()
+
+    print("DB RESULT:", result)
+
+    for item in result:
+        item = GameObject(gameUserDetails=default_details, gameDetails=item)
+
+    print(result)
 
     return result
+    
+
 
 '''
-try: 
-    client = pymongo.MongoClient(uri, server_api=pymongo.server_api.ServerApi(version="1", strict=True, deprecation_errors=True))
-
-    client.admin.command("ping")
-    print("Successfully connected to database!")
-
-
-
-    database = client["LicentaGamesDB"]
-
-
-except Exception as e:
-    raise Exception("Error connecting to database: ", e)
+Kept for future possible reference
 
 def insert_to_collection(collection_name, object_dict, object_id = None, patch=False):
     if collection_name in collections:
@@ -65,33 +78,4 @@ def insert_to_collection(collection_name, object_dict, object_id = None, patch=F
 #    print(result.acknowledged) # Boolean of if it worked
 #    print(result.inserted_id) # String of the inserted ID
 
-        
-def get_from_collection(collection_name, object_id):
-    if collection_name in collections:
-        #result = collections[collection_name].find_one({"_id": ObjectId(object_id)},{"_id": {"$toString": "$_id"}})
-        pipeline = [
-                { "$match": { "_id": ObjectId(object_id) } },
-                { "$addFields": { "_id": { "$toString": "$_id" } } }
-                    ]
-        result = collections[collection_name].aggregate(pipeline).next()
-        print(result)
-        return result
-    else:
-        return False # Error handle
-
-def get_multiple_from_collection(collection_name, query = {}):
-    if collection_name in collections:
-        pipeline = [
-                { "$match": query },
-                { "$addFields": { "_id": { "$toString": "$_id" } } }
-                    ]
-        result = collections[collection_name].aggregate(pipeline)
-        return list(result)
-    else:
-        return False # Error handle
-
-def delete_from_collection(collection_name, object_id):
-    if collection_name in collections:
-        result = collections[collection_name].delete_one({"_id":ObjectId(object_id)})
-    return result
-    '''
+'''
