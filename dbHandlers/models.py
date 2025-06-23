@@ -2,7 +2,7 @@ from typing import Optional, Union
 
 from pydantic import BaseModel, Field
 
-from beanie import Document, Indexed, PydanticObjectId
+from beanie import Document, Indexed, PydanticObjectId, Link
 
 from bson import ObjectId
 
@@ -30,6 +30,14 @@ class GameDetails(Document):
         keep_nulls = False
         name = "Games"
 
+class LinkTest(Document):
+    testName: Union[str, None] = None
+    testId: Union[str, None] = None
+    testLink: Union[Link[GameDetails], str, None] = None
+
+    class Settings:
+        keep_nulls = False
+        name = "ListingTests"
 
 class GameObject(BaseModel):
     gameUserDetails: UserDetails

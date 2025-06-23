@@ -18,7 +18,9 @@ load_dotenv()
 
 import dbHandlers.dbhandler as handler
 
-from dbHandlers.models import GameDetails
+from dbHandlers.models import GameDetails, LinkTest
+
+from beanie import Link, WriteRules, PydanticObjectId
 
 # import pymongo
 
@@ -96,6 +98,24 @@ async def delete_one_game(game_id):
     print(game)
     await game.delete()
     return {}
+
+@app.post("/listing", status_code=status.HTTP_201_CREATED)
+async def post_one_listing(listing: LinkTest):
+    print(listing.testId)
+    if listing.testId:
+        print(listing.testId)
+        game = GameDetails.link_from_id(PydanticObjectId(listing.testId))
+        print(game, "NEXT")
+        listing.testLink = game
+        print(listing.testLink, " NEXT ")
+        print(listing)
+        result = await listing.insert()
+
+@app.get("/listing/{listing_id}")
+async def get_one_listing(listing_id):
+    listing = await LinkTest.get(listing_id, fetch_links=True, nesting_depth=1)
+    print(listing.testLink)
+    return listing
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

@@ -4,7 +4,7 @@ from beanie import Document, Indexed, init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
 
-from dbHandlers.models import GameDetails, GameObject, UserDetails, TestModel
+from dbHandlers.models import GameDetails, GameObject, UserDetails, LinkTest
 
 import os
 from dotenv import load_dotenv
@@ -22,7 +22,7 @@ uri = os.environ['MONGO_CONNECTION_STRING']
 async def init_database():
     client = AsyncIOMotorClient(uri)
 
-    await init_beanie(database=client.LicentaGamesDB, document_models=[GameDetails])
+    await init_beanie(database=client.LicentaGamesDB, document_models=[GameDetails, LinkTest])
 
     print("DB Initialized")
 
@@ -56,7 +56,6 @@ async def get_multiple_from_collection(query = {}):
     print(result)
 
     return result
-    
 
 
 '''
