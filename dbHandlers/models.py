@@ -35,6 +35,10 @@ class GameObject(BaseModel):
     gameUserDetails: UserDetails
     gameDetails: GameDetails
 
+class ListingObject(Document):
+    listingUserDetails: UserDetails
+    listingGameIds: Union[list, None] = None
+
 class TestModel(BaseModel):
     test: UserDetails
 
