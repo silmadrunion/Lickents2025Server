@@ -16,9 +16,11 @@ from typing import Union
 
 load_dotenv()
 
-import dbHandlers.dbhandler as handler
+#import dbHandlers.dbhandler as handler
+from models.handler import init_database
+from routes import game
 
-from dbHandlers.models import GameDetails, LinkTest
+#from dbHandlers.models import GameDetails, ListingDetails, ListingObject
 
 from beanie import Link, WriteRules, PydanticObjectId
 
@@ -33,10 +35,9 @@ def generic_mockup(mockup_string):
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Code before ; inits
-    await handler.init_database()
+    await init_database()
     yield #This is when server is running
     # Code after ; dallocs
-
 
 app = FastAPI(lifespan=lifespan)
 
@@ -52,10 +53,13 @@ app.add_middleware(
     allow_headers = ["*"]
 )
 
+app.include_router(game.router)
+
 @app.get("/")
 async def root():
     return "This is the server root"
 
+'''
 @app.get("/game", status_code=status.HTTP_200_OK)
 async def get_all_games(user_id: Union[str, None] = None):
     if user_id:
@@ -97,24 +101,22 @@ async def delete_one_game(game_id):
     print(game)
     await game.delete()
     return {}
+'''
 
+'''
 @app.post("/listing", status_code=status.HTTP_201_CREATED)
-async def post_one_listing(listing: LinkTest):
-    print(listing.testId)
-    if listing.testId:
-        print(listing.testId)
-        game = GameDetails.link_from_id(PydanticObjectId(listing.testId))
-        print(game, "NEXT")
-        listing.testLink = game
-        print(listing.testLink, " NEXT ")
-        print(listing)
-        result = await listing.insert()
+async def post_one_listing(listing: ListingDetails):
+    print(listing.listingGameId)
+    result = await listing.insert()
 
 @app.get("/listing/{listing_id}")
 async def get_one_listing(listing_id):
-    listing = await LinkTest.get(listing_id, fetch_links=True, nesting_depth=1)
-    print(listing.testLink)
-    return listing
+    listing = await ListingDetails.get(listing_id)
+    print(listing.listingGameId)
+    game = await GameDetails.get(listing.listingGameId)
 
+    
+    return listing
+'''
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

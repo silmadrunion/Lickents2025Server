@@ -6,11 +6,7 @@ from beanie import Document, Indexed, PydanticObjectId, Link
 
 from bson import ObjectId
 
-class UserDetails(BaseModel):
-    id: str = Field(default="stri123123123ng", alias="_id")
-    userName: str = "Fluff Robota"
-    userImagePath: str = "some path"
-    userRating: float = 4.99
+from models.user import UserDetails
 
 class GameDetails(Document):
     gameName: Union[str, None] = None
@@ -30,33 +26,7 @@ class GameDetails(Document):
         keep_nulls = False
         name = "Games"
 
-class LinkTest(Document):
-    testName: Union[str, None] = None
-    testId: Union[str, None] = None
-    testLink: Union[Link[GameDetails], str, None] = None
-
-    class Settings:
-        keep_nulls = False
-        name = "ListingTests"
-
-class ListingDetails(Document):
-    listingOwnerId: Union[str, None] = None
-    listingGameId: Union[str, None] = None
-    listingOfferIds: Union[list, None] = None
-
-class ListingObject(BaseModel):
-    listingUserDetails: UserDetails
-    listingDetails: ListingDetails
-    listingGameDetails: GameDetails
-#    listingOfferDetails: list[OfferObject]
-
-#class OfferObject(Document):
 
 class GameObject(BaseModel):
     gameUserDetails: UserDetails
     gameDetails: GameDetails
-
-class TestModel(BaseModel):
-    test: UserDetails
-
-    
