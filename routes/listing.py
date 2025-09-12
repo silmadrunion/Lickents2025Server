@@ -3,6 +3,7 @@ from fastapi import APIRouter, status
 from typing import Union
 
 from models.user import UserDetails, default_user
+from models.game import GameDetails
 from models.listing import ListingObject, ListingDetails
 
 router = APIRouter(prefix="/listing")
@@ -17,16 +18,23 @@ async def get_all_listings(user_id: Union[str, None] = None):
     else:
         listingObj = await ListingDetails.find().to_list()
     print("DB RESULT:", listingObj)
+    listingFinalResult = []
     for item in listingObj:
-        item = ListingObject(listingUserDetails=default_user, listingDetails=item)
-    print(listingObj)
-    return listingObj
+        game = await GameDetails.get(item.listingGameId)
+        print("Game: ", game)
+        item = ListingObject(listingUserDetails=default_user, listingDetails=item, listingGameDetails=game)
+        print("Listing: ", item)
+        listingFinalResult.append(item)
+    print("Final ",listingObj)
+    return listingFinalResult
 
 @router.get("/{listing_id}")
 async def get_one_listing(listing_id):
     listing = await ListingDetails.get(listing_id)
     print(listing.listingGameId)
-    game = await ListingDetails.get(listing.listingGameId)
+    game = await GameDetails.get(listing.listingGameId)
+    listingObj = ListingObject(listingUserDetails=default_user, listingDetails=listing, listingGameDetails=game)
+    return listingObj
 
 # GET by offer? Probably not
 
