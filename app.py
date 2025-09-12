@@ -18,7 +18,7 @@ load_dotenv()
 
 #import dbHandlers.dbhandler as handler
 from models.handler import init_database
-from routes import game
+from routes import game, listing
 
 #from dbHandlers.models import GameDetails, ListingDetails, ListingObject
 
@@ -54,6 +54,7 @@ app.add_middleware(
 )
 
 app.include_router(game.router)
+app.include_router(listing.router)
 
 @app.get("/")
 async def root():
@@ -104,19 +105,7 @@ async def delete_one_game(game_id):
 '''
 
 '''
-@app.post("/listing", status_code=status.HTTP_201_CREATED)
-async def post_one_listing(listing: ListingDetails):
-    print(listing.listingGameId)
-    result = await listing.insert()
 
-@app.get("/listing/{listing_id}")
-async def get_one_listing(listing_id):
-    listing = await ListingDetails.get(listing_id)
-    print(listing.listingGameId)
-    game = await GameDetails.get(listing.listingGameId)
-
-    
-    return listing
 '''
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
