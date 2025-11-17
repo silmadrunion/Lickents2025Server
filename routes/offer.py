@@ -38,11 +38,15 @@ async def get_all_offers(user_id: Union[str, None] = None):
 
 @router.get("/{listing_id}")
 async def get_one_listing(listing_id):
-    listing = await ListingDetails.get(listing_id)
-    print(listing.listingGameId)
-    game = await GameDetails.get(listing.listingGameId)
-    listingObj = ListingObject(listingUserDetails=default_user, listingDetails=listing, listingGameDetails=game)
-    return listingObj
+    offer = await OfferDetails.get(listing_id)
+    print(offer.offerGameIds)
+    gameList = []
+    for gameId in offer.offerGameIds:
+            game = await GameDetails.get(gameId)
+            gameList.append(game)
+            print("Game: ", game)
+    offerObj = OfferObject(offerDetails=default_user, offerDetails=offer, offerGameDetails=gameList)
+    return offerObj
 
 # GET by offer? Probably not
 
@@ -65,9 +69,9 @@ async def patch_one_listing(listing: ListingDetails):
            document_dict[key] = value
    result = await listing.update({'$set': document_dict})
 
-@router.delete("/{listing_id}", status_code=status.HTTP_200_OK)
-async def delete_one_listing(listing_id):
-    listing = await ListingDetails.get(listing_id)
-    print(listing)
-    await listing.delete()
+@router.delete("/{offer_id}", status_code=status.HTTP_200_OK)
+async def delete_one_listing(offer_id):
+    offer = await OfferDetails.get(offer_id)
+    print(offer)
+    await offer.delete()
     return {}
