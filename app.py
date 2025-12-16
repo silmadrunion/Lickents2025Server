@@ -18,7 +18,7 @@ load_dotenv()
 
 #import dbHandlers.dbhandler as handler
 from models.handler import init_database
-from routes import game, listing
+from routes import game, listing, offer
 
 #from dbHandlers.models import GameDetails, ListingDetails, ListingObject
 
@@ -55,6 +55,7 @@ app.add_middleware(
 
 app.include_router(game.router)
 app.include_router(listing.router)
+app.include_router(offer.router)
 
 @app.get("/")
 async def root():

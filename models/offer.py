@@ -16,7 +16,7 @@ class OfferDetails(Document):
     listingOfferIds: Union[list, None] = None
     class Settings:
         keep_nulls = False
-        name = "OfferTests"
+        name = "Offers"
 
 class OfferObject(BaseModel):
     offerUserDetails: UserDetails

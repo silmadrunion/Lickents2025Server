@@ -53,6 +53,7 @@ async def patch_one_game(game: GameDetails):
        if value is not None:
            document_dict[key] = value
    result = await game.update({'$set': document_dict})
+   return result
 
 @router.delete("/{game_id}", status_code=status.HTTP_200_OK)
 async def delete_one_game(game_id):

@@ -56,6 +56,7 @@ async def patch_one_listing(listing: ListingDetails):
        if value is not None:
            document_dict[key] = value
    result = await listing.update({'$set': document_dict})
+   return result
 
 @router.delete("/{listing_id}", status_code=status.HTTP_200_OK)
 async def delete_one_listing(listing_id):
