@@ -13,7 +13,7 @@ from models.game import GameDetails
 class OfferDetails(Document):
     offerOwnerId: Union[str, None] = None
     offerGameIds: Union[list, None] = None
-    listingOfferIds: Union[list, None] = None
+    listingOfferId: Union[str, None] = None
     class Settings:
         keep_nulls = False
         name = "Offers"
